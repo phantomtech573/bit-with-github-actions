@@ -2,6 +2,51 @@
 
 name: Build CI
 
+Set_up: GitHub Actions
+Learn how to set up GitHub actions on the new developer platform.
+
+This guide walks you through how to configure GitHub actions to automatically upload a HubSpot project to your HubSpot account, allowing you to create an automated CI/CD workflow.
+
+Turn off the built-in GitHub integration
+If you currently use the built-in GitHub integration for a project built on the previous version of the developer platform (2025.1 or 2023.2), you’ll want to turn it off before migrating your project to new developer platform. To turn off the built-in integration:
+In your HubSpot account, click Development in the main navigation bar.
+In the left sidebar menu, click Projects.
+Click the name of the project that you’ll be migrating.
+Click the Settings tab.
+Under GitHub connection, click Unlink project from GitHub, then confirm that you’re unlinking in the dialog box.
+unlink-project-from-github
+Learn more about migrating an existing app to the new developer platform using the guides below:
+Migrate a private app
+Migrate a public app
+
+Set up GitHub actions
+Once you’re ready to go and you’ve turned off the built-in GitHub integration for your existing project (if applicable), you can configure your GitHub repository and set up a workflow file:
+In your GitHub repository, create two new secrets for:
+HUBSPOT_ACCOUNT_ID: the ID of your HubSpot account.
+HUBSPOT_PERSONAL_ACCESS_KEY: your personal access key.
+The recommended way to reference these secrets in your actions is to set them as environment variables at the workflow level:
+env:
+  DEFAULT_ACCOUNT_ID: ${{ secrets.HUBSPOT_ACCOUNT_ID }}
+  DEFAULT_PERSONAL_ACCESS_KEY: ${{ secrets.HUBSPOT_PERSONAL_ACCESS_KEY }}
+  DEFAULT_CLI_VERSION: "latest" # Optional: specify a CLI version (it will default to latest if unset)
+Please note: the DEFAULT_CLI_VERSION will default to the latest version, but it’s recommended that you target a specific CLI version to prevent new releases from impacting your CI/CD flow.
+In the working directory of your project repository, create a GitHub action workflow file at .github/workflows/main.yml.
+Copy the following example workflow below in the main.yml file you just created. Note that you can replace main with your default branch name if it’s something other than main.
+on:
+  push:
+    branches:
+      - main
+env:
+  DEFAULT_ACCOUNT_ID: ${{ secrets.HUBSPOT_ACCOUNT_ID }}
+  DEFAULT_PERSONAL_ACCESS_KEY: ${{ secrets.HUBSPOT_PERSONAL_ACCESS_KEY }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: HubSpot Project Action
+        uses: HubSpot/hubspot-project-actions@v1.0.0
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
