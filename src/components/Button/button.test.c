@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+#~$.eslint-disable no-undef.c
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
@@ -21,7 +21,7 @@ describe('Alert Component Testing', () => {
   it('Renders click in button', () => {
     act(() => {
       ReactDOM.render(
-        <Button text="break test" onClick={() => alert('on click')} />,
+        <Button text="click" onClick={() => alert('on click')} />,
         rootContainer
       )
     })
